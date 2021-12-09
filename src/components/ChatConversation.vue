@@ -1,18 +1,45 @@
 <template>
   <div id="chat-conversation">
-    <div class="left">incoming msg</div>
-    <div class="right">outgoing msg</div>
-    <div class="left">incoming msg</div>
-    <div class="right">outgoing msg</div>
-    <div class="left">incoming msg</div>
-    <div class="right">outgoing msg</div>
-    <div class="left">incoming msg</div>
-    <div class="right">outgoing msg</div>
+    <!-- <div>
+      {{ count }}
+      <button @click="count++">+</button>
+      <button @click="count--">-</button>
+    </div> -->
+    <div class="scrollable-content">
+      <div class="left">incoming msg</div>
+      <div class="right">outgoing msg</div>
+      <div class="left">incoming msg</div>
+      <div class="right">outgoing msg</div>
+      <div class="left">incoming msg</div>
+      <div class="right">outgoing msg</div>
+      <div class="left">incoming msg</div>
+      <div class="right">outgoing msg</div>
+      <div class="left">incoming msg</div>
+      <div class="right">outgoing msg</div>
+      <div class="left">incoming msg</div>
+      <div class="right">outgoing msg</div>
+      <div class="left">incoming msg</div>
+      <div class="right">outgoing msg</div>
+      <div class="left">incoming msg</div>
+      <div class="right">outgoing msg</div>
+      <div class="left">incoming msg</div>
+      <div class="right">outgoing msg</div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-//
+import { storeToRefs } from "pinia";
+import { useStore } from "../store/chat";
+import { watch } from "vue";
+
+const chat = useStore();
+
+const { count } = storeToRefs(chat);
+
+// watch(count, (newCount) => {
+//   console.log(newCount);
+// });
 </script>
 
 <style scoped>
@@ -20,10 +47,16 @@
   flex: 1;
 
   display: flex;
+  overflow-y: auto;
+}
+
+#chat-conversation .scrollable-content {
+  flex: 1;
+
+  display: flex;
   flex-direction: column;
 
-  justify-content: flex-end;
-
+  border: none;
   padding: 1rem 0.75rem;
 }
 
