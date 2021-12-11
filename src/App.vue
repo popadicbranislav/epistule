@@ -28,9 +28,7 @@ html {
   height: 40rem;
   width: 30rem;
   margin: 5rem auto;
-}
 
-#app * {
-  border: 1px solid #bbb;
+  box-shadow: 0 0.5rem 1rem #0006;
 }
 </style>
