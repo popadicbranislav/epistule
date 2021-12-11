@@ -62,16 +62,26 @@ const { count } = storeToRefs(chat);
 
 .left,
 .right {
+  font-size: 1.2rem;
+
   max-width: 80%;
-  padding: 0.5rem;
+  padding: 0.7rem 1.4rem;
   border-radius: 1rem;
+
+  color: white;
 }
 
 .left {
   align-self: flex-start;
+  border-top-left-radius: 0;
+
+  background-color: #318ffa;
 }
 
 .right {
   align-self: flex-end;
+  border-top-right-radius: 0;
+
+  background-color: #8f31fa;
 }
 </style>
