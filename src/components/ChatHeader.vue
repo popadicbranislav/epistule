@@ -1,5 +1,5 @@
 <template>
-  <div id="chat-header">Header</div>
+  <div id="chat-header"><h1>Chat header</h1></div>
 </template>
 
 <script setup lang="ts"></script>
@@ -10,9 +10,13 @@
   align-items: center;
   justify-content: center;
 
-  font-size: 2.5rem;
-  font-weight: bold;
+  padding: 0.5rem;
 
-  padding: 0.2rem;
+  box-shadow: 0 0.2rem 0.8rem #0004;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: normal;
 }
 </style>
