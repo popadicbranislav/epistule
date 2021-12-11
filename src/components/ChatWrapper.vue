@@ -19,5 +19,9 @@ import ChatInput from "./ChatInput.vue";
 
   display: flex;
   flex-direction: column;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
 }
 </style>
