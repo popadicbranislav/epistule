@@ -14,8 +14,12 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import { RasaService } from "../common/rasa.service";
+import { useChatStore } from "../store/chat";
+import { v4 as uuid } from "uuid";
 
-const sender_id = "jfioejvreoailvje8v9u089emuv90eu8av9u";
+const chat_store = useChatStore();
+
+const sender_id = "jfioreajvoiareujv98eauv09u390nau";
 
 const state = reactive({
   chat_input: "",
@@ -29,11 +33,29 @@ function onSubmitChatInput() {
 
   if (outgoing_message === "") return;
 
+  chat_store.addMessage({
+    id: uuid(),
+    username: sender_id,
+    message: {
+      type: "text",
+      text: outgoing_message,
+    },
+    time: new Date().getTime(),
+  });
+
   RasaService.post({
     message: outgoing_message,
     sender: sender_id,
   }).then((res) => {
-    console.log(`message: "${outgoing_message}"\n`, "response: ", res.data);
+    chat_store.addMessage({
+      id: uuid(),
+      username: "bot",
+      message: {
+        type: "text",
+        text: res.data[0].text,
+      },
+      time: new Date().getTime(),
+    });
   });
 }
 </script>
