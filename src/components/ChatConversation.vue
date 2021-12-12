@@ -1,45 +1,24 @@
 <template>
   <div id="chat-conversation">
-    <!-- <div>
-      {{ count }}
-      <button @click="count++">+</button>
-      <button @click="count--">-</button>
-    </div> -->
     <div class="scrollable-content">
-      <div class="left">incoming msg</div>
-      <div class="right">outgoing msg</div>
-      <div class="left">incoming msg</div>
-      <div class="right">outgoing msg</div>
-      <div class="left">incoming msg</div>
-      <div class="right">outgoing msg</div>
-      <div class="left">incoming msg</div>
-      <div class="right">outgoing msg</div>
-      <div class="left">incoming msg</div>
-      <div class="right">outgoing msg</div>
-      <div class="left">incoming msg</div>
-      <div class="right">outgoing msg</div>
-      <div class="left">incoming msg</div>
-      <div class="right">outgoing msg</div>
-      <div class="left">incoming msg</div>
-      <div class="right">outgoing msg</div>
-      <div class="left">incoming msg</div>
-      <div class="right">outgoing msg</div>
+      <div
+        v-for="msg in messages"
+        :key="msg.id"
+        :class="msg.username === 'bot' ? 'left' : 'right'"
+      >
+        {{ msg.message.text }}
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useStore } from "../store/chat";
-import { watch } from "vue";
+import { useChatStore } from "../store/chat";
 
-const chat = useStore();
+const chat_store = useChatStore();
 
-const { count } = storeToRefs(chat);
-
-// watch(count, (newCount) => {
-//   console.log(newCount);
-// });
+const { messages } = storeToRefs(chat_store);
 </script>
 
 <style scoped>
@@ -55,14 +34,17 @@ const { count } = storeToRefs(chat);
 
   display: flex;
   flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+
+  overflow-y: auto;
 
   border: none;
-  padding: 1rem 0.75rem;
 }
 
 .left,
 .right {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
 
   max-width: 80%;
   padding: 0.7rem 1.4rem;
