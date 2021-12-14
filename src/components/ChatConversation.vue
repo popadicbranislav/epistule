@@ -6,7 +6,13 @@
         :key="msg.id"
         :class="msg.username === 'bot' ? 'left' : 'right'"
       >
-        {{ msg.message.text }}
+        <template v-if="msg.message.type === 'text'">
+          {{ msg.message.text }}
+        </template>
+        <template v-else-if="msg.message.type === 'buttons'">
+          <div></div>
+          {{ msg.message.buttons }}
+        </template>
       </div>
     </div>
   </div>
@@ -15,6 +21,7 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useChatStore } from "../store/chat";
+import { ButtonGroup } from "../store/chat";
 
 const chat_store = useChatStore();
 
