@@ -29,6 +29,7 @@ import { reactive } from "vue";
 import { RasaService } from "../common/rasa.service";
 import { useChatStore } from "../store/chat";
 import { v4 as uuid } from "uuid";
+import type { ButtonGroup } from "../store/chat";
 
 const chat_store = useChatStore();
 
@@ -53,21 +54,43 @@ function onSubmitChatInput() {
       type: "text",
       text: outgoing_message,
     },
-    time: new Date().getTime(),
+    time: Date.now(),
   });
 
   RasaService.post({
     message: outgoing_message,
     sender: sender_id,
   }).then((res) => {
-    chat_store.addMessage({
-      id: uuid(),
-      username: "bot",
-      message: {
-        type: "text",
-        text: res.data[0].text,
-      },
-      time: new Date().getTime(),
+    const data = res.data;
+    if (!Array.isArray(data)) {
+      return;
+    }
+
+    data.forEach((element) => {
+      console.log("adding message", element);
+      chat_store.addMessage({
+        id: uuid(),
+        username: "bot",
+        message: {
+          type: "text",
+          text: element.text,
+        },
+        time: new Date().getTime(),
+      });
+
+      const buttons = element.buttons;
+      if (!Array.isArray(buttons) || buttons.length == 0) {
+        return;
+      }
+
+      const buttonGroup: ButtonGroup = {
+        id: uuid(),
+        username: "bot",
+        message: { type: "buttons", buttons: buttons },
+        time: Date.now(),
+      };
+
+      chat_store.addButtons(buttonGroup);
     });
   });
 }
