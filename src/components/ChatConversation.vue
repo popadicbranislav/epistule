@@ -1,19 +1,21 @@
 <template>
   <div id="chat-conversation">
     <div class="scrollable-content">
-      <div
-        v-for="msg in messages"
-        :key="msg.id"
-        :class="msg.username === 'bot' ? 'left' : 'right'"
-      >
-        <template v-if="msg.message.type === 'text'">
+      <template v-for="msg in messages" :key="msg.id">
+        <div
+          v-if="msg.message.type === 'text'"
+          class="text"
+          :class="[msg.username === 'bot' ? 'bot' : 'user']"
+        >
           {{ msg.message.text }}
-        </template>
-        <template v-else-if="msg.message.type === 'buttons'">
-          <div></div>
-          {{ msg.message.buttons }}
-        </template>
-      </div>
+        </div>
+
+        <div v-else-if="msg.message.type === 'buttons'" class="button-group">
+          <div class="button" v-for="btn in msg.message.buttons">
+            {{ btn.title }}
+          </div>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -21,7 +23,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useChatStore } from "../store/chat";
-import { ButtonGroup } from "../store/chat";
 
 const chat_store = useChatStore();
 
@@ -49,28 +50,55 @@ const { messages } = storeToRefs(chat_store);
   border: none;
 }
 
-.left,
-.right {
+.bot.text,
+.user.text {
   font-size: 1.4rem;
 
   max-width: 80%;
   padding: 0.7rem 1.4rem;
-  border-radius: 1rem;
-
-  color: white;
 }
 
-.left {
+.bot.text {
   align-self: flex-start;
-  border-top-left-radius: 0;
-
-  background-color: #318ffa;
+  background-color: coral;
 }
 
-.right {
+.user.text {
   align-self: flex-end;
-  border-top-right-radius: 0;
+  background-color: turquoise;
+}
 
-  background-color: #8f31fa;
+.button-group {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.button-group .button {
+  font-size: 1.4rem;
+
+  max-width: 10rem;
+  padding: 0.5rem;
+
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+
+  border: 1px solid coral;
+  color: coral;
+
+  cursor: pointer;
+}
+
+.button-group .button:hover {
+  box-shadow: 0 0.2rem 0.3rem #3335;
+}
+
+.button-group .button:active {
+  background: coral;
+  color: white;
 }
 </style>
