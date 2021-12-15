@@ -10,7 +10,7 @@ export type Message = {
   time: number;
 };
 
-type Button = {
+export type Button = {
   title: string;
   payload: string;
 };

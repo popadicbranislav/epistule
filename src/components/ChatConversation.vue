@@ -11,7 +11,11 @@
         </div>
 
         <div v-else-if="msg.message.type === 'buttons'" class="button-group">
-          <div class="button" v-for="btn in msg.message.buttons">
+          <div
+            class="button"
+            v-for="btn in msg.message.buttons"
+            @click="onButtonResponseClick(btn)"
+          >
             {{ btn.title }}
           </div>
         </div>
@@ -23,10 +27,28 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useChatStore } from "../store/chat";
+import { RasaService } from "../common/rasa.service";
+import type { Button } from "../store/chat";
+import { SENDER_ID_KEY_NAME } from "../common/config";
 
 const chat_store = useChatStore();
 
 const { messages } = storeToRefs(chat_store);
+
+function onButtonResponseClick(btn: Button) {
+  const sender_id = window.localStorage.getItem(SENDER_ID_KEY_NAME);
+
+  if (sender_id == undefined) {
+    console.error("Failed to send message on button click. No Sender ID");
+    return;
+  }
+
+  // TODO: send message on button needs to add messages to store
+  // RasaService.post({
+  //   message: btn.payload,
+  //   sender: sender_id,
+  // });
+}
 </script>
 
 <style scoped>
