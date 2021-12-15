@@ -29,11 +29,18 @@ import { reactive } from "vue";
 import { RasaService } from "../common/rasa.service";
 import { useChatStore } from "../store/chat";
 import { v4 as uuid } from "uuid";
-import type { ButtonGroup } from "../store/chat";
+import { SENDER_ID_KEY_NAME } from "../common/config";
+// import type { ButtonGroup } from "../store/chat";
 
 const chat_store = useChatStore();
 
-const sender_id = "jfioreajvoiareujv98eauv09u390nau";
+const sender_id =
+  window.localStorage.getItem(SENDER_ID_KEY_NAME) ||
+  (() => {
+    let sender_id = uuid();
+    window.localStorage.setItem(SENDER_ID_KEY_NAME, sender_id);
+    return sender_id;
+  })();
 
 const state = reactive({
   chat_input: "",
@@ -83,14 +90,12 @@ function onSubmitChatInput() {
         return;
       }
 
-      const buttonGroup: ButtonGroup = {
+      chat_store.addButtons({
         id: uuid(),
         username: "bot",
         message: { type: "buttons", buttons: buttons },
         time: Date.now(),
-      };
-
-      chat_store.addButtons(buttonGroup);
+      });
     });
   });
 }
