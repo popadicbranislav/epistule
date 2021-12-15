@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 
 export type Message = {
   id: string;
-  username: "bot" | string;
+  username: string;
   message: {
     type: "text";
     text: string;
@@ -17,7 +17,7 @@ type Button = {
 
 export type ButtonGroup = {
   id: string;
-  username: "bot";
+  username: string;
   message: {
     type: "buttons";
     buttons: Button[];
