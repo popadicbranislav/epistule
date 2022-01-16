@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import Chat from "./components/ChatWrapper.vue";
+import Chat from "./components/ChatComponent.vue";
 </script>
 
 <style>
@@ -18,17 +18,22 @@ html {
   font-family: inherit;
 }
 
+:root {
+  --clr-primary: green;
+  --clr-secondary: turquoise;
+  --text: #262626;
+  --text-light: #ededed;
+}
+
 #app {
+  /* fonts */
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #222;
 
-  height: 40rem;
-  width: 30rem;
-  margin: 5rem auto;
-
-  box-shadow: 0 0.5rem 1rem #0006;
+  height: 100vh;
+  width: 100vw;
 }
 </style>
