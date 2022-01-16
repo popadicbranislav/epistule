@@ -1,46 +1,7 @@
-<template>
-  <form id="chat-form" @submit.prevent="onSubmitChatInput">
-    <input
-      class="chat-input"
-      type="text"
-      placeholder="Enter message"
-      v-model="state.chat_input"
-    />
-
-    <button class="chat-submit-btn" type="submit">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        height="24px"
-        viewBox="0 0 24 24"
-        width="24px"
-        fill="currentColor"
-      >
-        <path d="M0 0h24v24H0V0z" fill="none" />
-        <path
-          d="M4.01 6.03l7.51 3.22-7.52-1 .01-2.22m7.5 8.72L4 17.97v-2.22l7.51-1M2.01 3L2 10l15 2-15 2 .01 7L23 12 2.01 3z"
-        />
-      </svg>
-    </button>
-  </form>
-</template>
-
 <script setup lang="ts">
 import { reactive } from "vue";
-import { RasaService } from "../common/rasa.service";
-import { useChatStore } from "../store/chat";
-import { v4 as uuid } from "uuid";
-import { SENDER_ID_KEY_NAME } from "../common/config";
-// import type { ButtonGroup } from "../store/chat";
 
-const chat_store = useChatStore();
-
-const sender_id =
-  window.localStorage.getItem(SENDER_ID_KEY_NAME) ||
-  (() => {
-    let sender_id = uuid();
-    window.localStorage.setItem(SENDER_ID_KEY_NAME, sender_id);
-    return sender_id;
-  })();
+const emit = defineEmits<{ (e: "submit", message: string): void }>();
 
 const state = reactive({
   chat_input: "",
@@ -49,110 +10,79 @@ const state = reactive({
 /** Event handler for a submit event on the chat input form */
 function onSubmitChatInput() {
   const outgoing_message = state.chat_input;
-  // Clear the chat input
+  // Clear the input
   state.chat_input = "";
 
   if (outgoing_message === "") return;
 
-  chat_store.addMessage({
-    id: uuid(),
-    username: sender_id,
-    message: {
-      type: "text",
-      text: outgoing_message,
-    },
-    time: Date.now(),
-  });
-
-  RasaService.post({
-    message: outgoing_message,
-    sender: sender_id,
-  }).then((res) => {
-    const data = res.data;
-    if (!Array.isArray(data)) {
-      return;
-    }
-
-    data.forEach((element) => {
-      console.log("adding message", element);
-      chat_store.addMessage({
-        id: uuid(),
-        username: "bot",
-        message: {
-          type: "text",
-          text: element.text,
-        },
-        time: new Date().getTime(),
-      });
-
-      const buttons = element.buttons;
-      if (!Array.isArray(buttons) || buttons.length == 0) {
-        return;
-      }
-
-      chat_store.addButtons({
-        id: uuid(),
-        username: "bot",
-        message: { type: "buttons", buttons: buttons },
-        time: Date.now(),
-      });
-    });
-  });
+  emit("submit", outgoing_message);
 }
 </script>
 
-<style scoped>
-#chat-form {
+<template>
+  <form class="chat-form" @submit.prevent="onSubmitChatInput">
+    <input
+      class="chat-form__input"
+      type="text"
+      placeholder="Enter message"
+      v-model="state.chat_input"
+      autofocus
+    />
+
+    <button class="chat-form__submit" type="submit">
+      <i class="fas fa-envelope"></i>
+    </button>
+  </form>
+</template>
+
+<style lang="scss" scoped>
+.chat-form {
+  --size: 50px;
   display: flex;
-
-  align-items: center;
-  justify-content: stretch;
-
-  box-shadow: 0 -0.2rem 0.8rem #0004;
-}
-
-.chat-input {
-  flex: 1;
   font-size: 2rem;
+  position: fixed;
+  inset: auto 0.5rem 0.5rem;
 
-  padding: 0.5rem;
+  border: 1px solid var(--clr-primary);
+  border-radius: 100vh;
+  overflow: hidden;
 
-  border: none;
-  outline: none;
-}
+  &:focus-within {
+    box-shadow: 0 0 0 2px var(--clr-primary);
+  }
 
-.chat-submit-btn {
-  border: none;
-  margin: 0;
-  padding: 0;
-  width: auto;
-  overflow: visible;
+  &__input {
+    // background: pink;
+    border: 0;
 
-  background: transparent;
+    padding: 0 0.5em;
+    flex-grow: 1;
 
-  /* inherit font & color from ancestor */
-  color: inherit;
-  font: inherit;
+    &:focus {
+      outline: 0;
+    }
+  }
 
-  /* Normalize `line-height`. Cannot be changed from `normal` in Firefox 4+. */
-  line-height: normal;
+  &__submit {
+    background: 0;
+    color: var(--clr-primary);
 
-  /* Corrects font smoothing for webkit */
-  -webkit-font-smoothing: inherit;
-  -moz-osx-font-smoothing: inherit;
+    border: 0;
+    border-radius: 100vh;
 
-  /* Corrects inability to style clickable `input` types in iOS */
-  -webkit-appearance: none;
+    width: var(--size);
+    height: var(--size);
+    padding: 0 0.2em;
 
-  /* height: 100%; */
+    cursor: pointer;
 
-  /* font-size: 1.5rem; */
+    opacity: 0.7;
 
-  color: #aaa;
-  cursor: pointer;
-}
-
-.chat-submit-btn:hover {
-  color: #888;
+    &:focus,
+    &:hover {
+      outline: 0;
+      opacity: 1;
+    }
+  }
 }
 </style>
