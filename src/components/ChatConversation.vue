@@ -47,7 +47,7 @@ function onButtonResponseClick(btn: Button) {
   // RasaService.post({
   //   message: btn.payload,
   //   sender: sender_id,
-  // });
+  //});
 }
 </script>
 
@@ -82,12 +82,14 @@ function onButtonResponseClick(btn: Button) {
 
 .bot.text {
   align-self: flex-start;
-  background-color: coral;
+  background-color: var(--clr-secondary);
+  color: white;
 }
 
 .user.text {
   align-self: flex-end;
-  background-color: turquoise;
+  background-color: var(--clr-primary);
+  color: white;
 }
 
 .button-group {
